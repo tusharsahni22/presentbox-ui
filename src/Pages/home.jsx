@@ -6,9 +6,9 @@ function Home() {
     <div
       style={{
         backgroundImage:
-          "url(https://i.pinimg.com/736x/41/19/5c/41195c2f3ab1f8b6c6d8df337c5d4764.jpg)",
+          "url(https://i.pinimg.com/736x/39/13/90/391390a475ebd3fd253ef88a4c7f5552.jpg)",
         backgroundSize: "cover",
-        height: "100vh",
+        height: "200vh",
       }}
     >
       <Header />
