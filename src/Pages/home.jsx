@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "../Component/header.jsx";
+import Footer from "../Component/footer.jsx";
 
 function Home() {
   return (
@@ -12,6 +13,8 @@ function Home() {
       }}
     >
       <Header />
+      <div style={{ height: "150vh" }}></div>
+      <Footer />
     </div>
   );
 }

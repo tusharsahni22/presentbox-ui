@@ -30,8 +30,8 @@ const ImageWrapper = styled.div`
   margin-top: 30px;
   overflow: hidden;
   border-radius: 20px;
-  align-items: center;
-  display: flex;
+  /* align-items: center;
+  display: flex; */
 
   :hover {
     transition: all 0.45s cubic-bezier(0.22, 1, 0.36, 1);
@@ -62,7 +62,7 @@ function Headercards({ heading, subheading, img }) {
               style={{
                 borderRadius: "20px",
                 width: "100%",
-                height: "350px",
+                height: "70%",
                 objectFit: "cover",
                 // objectPosition: "center",
               }}
