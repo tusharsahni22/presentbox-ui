@@ -105,9 +105,17 @@
 body {
   min-height: 100vh;
   background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-  font-family: "Inter", "BBH Bartle", sans-serif;
+  font-family: "Rubik", sans-serif;
+  font-weight: 200;
 }
 
-.heading {
+.heading{
   font-family: "BBH Bartle", sans-serif;
+}
+
+.headingColor {
+  background: linear-gradient(135deg, #000000 -20%, #e7dfdf 98%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

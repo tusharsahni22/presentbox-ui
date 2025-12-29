@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { LuArrowUpRight } from "react-icons/lu";
 
 const Div = styled.div`
   width: 100%;
@@ -7,7 +8,7 @@ const Div = styled.div`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: 25% auto;
+  grid-template-columns: 35% 25% auto;
   gap: 20px;
   margin-top: 10px;
 `;
@@ -40,7 +41,18 @@ const ImageWrapper = styled.div`
   }
 `;
 
-function Headercards({ heading, subheading, img }) {
+const Links = styled.div`
+  display: flex;
+  margin-left: 30px;
+  margin-top: 30px;
+  flex-direction: column;
+  gap: 20px;
+  font-weight: 400;
+  text-decoration: underline;
+  font-size: 16px;
+`;
+
+function Threegrid({ heading, subheading, links, img }) {
   return (
     <Div>
       <hr
@@ -56,6 +68,17 @@ function Headercards({ heading, subheading, img }) {
           <Heading className="heading headingColor">{heading}</Heading>
           <Subheading>{subheading}</Subheading>
         </div>
+        <div>
+          <Links>
+            {links.map((link) => (
+              <div key={link}>
+                {link}
+                <LuArrowUpRight />
+              </div>
+            ))}
+          </Links>
+        </div>
+
         <div>
           <ImageWrapper>
             <img
@@ -76,4 +99,4 @@ function Headercards({ heading, subheading, img }) {
   );
 }
 
-export default Headercards;
+export default Threegrid;
