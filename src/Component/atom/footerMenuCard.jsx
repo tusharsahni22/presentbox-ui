@@ -17,7 +17,9 @@ const List = styled.ul`
   list-style: none;
     padding: 0;
     margin: 0;
-`
+    text-align: left;
+    padding:20px;
+    `
 const ListItem = styled.li`
     margin-bottom: 8px;
     cursor: pointer;
@@ -25,15 +27,23 @@ const ListItem = styled.li`
        cursor: pointer;
     }
 `
+const Link = styled.a`
+  color: #fff;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+`
+
 export default function FooterMenuCard({ heading, items = [] }) {
     console.log('FooterMenuCard items:', items, heading);
   return (
     <Wrapper>
       <Heading className='headingColor'>{heading}</Heading>
       <List>
-        {items.map((it, idx) => (
+        {items.map((e) => (
             
-          <ListItem key={idx}><a href={it.url}>{it.label}</a></ListItem>
+          <ListItem key={e.id}><Link href={e.url}>{e.lable}</Link></ListItem>
         
         ))}
       </List>
