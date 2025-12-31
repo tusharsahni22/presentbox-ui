@@ -10,7 +10,8 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
   background-size: cover;
   background-position: center;
-  padding: 16px 24px;
+  padding: 0 111px;
+  top: 63px;
   width: 100%;
   position: fixed;
 `;
@@ -31,9 +32,9 @@ const Hover = styled.div`
 `;
 const Head = styled.div`
   display: flex;
-  gap: 12px;
+  gap: 20px;
   align-items: center;
-`;
+`;  
 
 const Logo = styled.div`
   font-family: "BBH Bartle", sans-serif;
@@ -43,15 +44,15 @@ const Logo = styled.div`
 // Left cover: primary menu area (darker, expands on hover)
 const CoverLeft = styled.div`
   display: ${({ $collapsed }) => ($collapsed ? "none" : "flex")};
-  gap: 12px;
+  gap: 1rem;
   align-items: center;
-  height: 54px;
+  height: 70px;
   padding: 10px 20px;
   width: ${({ $active }) => ($active ? "100%" : "fit-content")};
   overflow: hidden;
   background: rgba(0, 0, 0, 0.85);
   /* background-color: #633535; */
-  border-radius: 30px;
+  border-radius: 32px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12),
     inset 0 1px 1px rgba(255, 255, 255, 0.06);
@@ -104,32 +105,29 @@ function Header() {
      setHoveredMenu("home");
     async function loadMenu() {
       try {
-        const res = await fetch("http://localhost:1337/api/headers?populate=*");
+        const res = await fetch("http://localhost:1337/api/headers?populate[MenuDescription]=true&populate[Img]=true&populate[Navlink][populate][navlinks]=true");
         if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
         const json = await res.json();
         const items = (json.data || []).map((e) => {
+          // menu description and possible link groups (Navlink / MenuLink)
           const menudescription = e.MenuDescription || {};
-          const links = e.MenuLink || [];
-          const imgObj = e.Img || null;
-          let imgUrl = null;
-          if (imgObj) {
-            imgUrl = imgObj.formats?.medium?.url || imgObj.url || null;
-            if (imgUrl && imgUrl.startsWith("/")) {
-              imgUrl = `http://localhost:1337${imgUrl}`;
-            }
-          }
+          // Accept different possible field names coming from Strapi
+          const rawLinks = e.Navlink || e.NavLink || e.Navlinks || e.MenuLink || e.MenuLinks || e.links || [];
+
+          // Keep the image object (Grid component will resolve Strapi file objects)
+          const imgObj = e.Img || e.img || null;
 
           return {
             key: e.id,
-            name: e.Name,
-            heading: menudescription.Heading,
-            subheading: menudescription.Description,
-            links: Array.isArray(links) ? links : [],
-            img: imgUrl,
-            grid: e.grid,
+            name: e.Name || e.name || `item-${e.id}`,
+            heading: menudescription?.Heading || menudescription?.heading || e.Name || e.name || '',
+            subheading: menudescription?.Description || menudescription?.description || '',
+            // pass the raw links/groups so Grid can handle nested navlinks or flat arrays
+            links: Array.isArray(rawLinks) ? rawLinks : [],
+            img: imgObj,
+            grid: e.grid || 'heading_image_image',
           };
         });
-        console.log(MENU.links);
 
         if (mounted && items.length) {
           setMENU(items);
@@ -159,7 +157,7 @@ function Header() {
         onMouseLeave={() => setHovered(null)}>
           <Head>
             <Logo>PresentBox</Logo>
-            {!hovered && <RxHamburgerMenu size={20} />}
+            {!hovered && <RxHamburgerMenu size={22} />}
 
             {hovered && Array.isArray(MENU) && MENU.map((e) => (
               <Hover key={e.key} style={{ marginLeft: "50px" }}
