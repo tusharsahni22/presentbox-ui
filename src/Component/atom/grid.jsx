@@ -1,6 +1,6 @@
-import React from "react";
 import styled from "styled-components";
 import { LuArrowUpRight } from "react-icons/lu";
+import Line from "./line";
 
 const Div = styled.div`
   width: 100%;
@@ -92,16 +92,16 @@ function normalizeGroupsForThreeColumns(links) {
   if (Array.isArray(first?.items)) return links.map((g) => g.items || []);
   if (Array.isArray(first)) return [links[0] || [], links[1] || [], links[2] || []];
   return chunkArray(links, 3);
-} 
+}
 
 function getImageUrl(img) {
   if (!img) return null;
   if (typeof img === 'string') return img;
   const base = (import.meta.env.VITE_API_BASE_URL || '');
-  const url =  img?.url || img?.formats?.medium?.url || img?.formats?.small?.url || img?.formats?.thumbnail?.url || null;
+  const url = img?.url || img?.formats?.medium?.url || img?.formats?.small?.url || img?.formats?.thumbnail?.url || null;
   if (!url) return null;
   return url.startsWith('http') ? url : `${base}${url}`;
-} 
+}
 
 function Grid({ heading, subheading, links, img, grid }) {
   const template = grid;
@@ -112,33 +112,25 @@ function Grid({ heading, subheading, links, img, grid }) {
 
   return (
     <Div>
-      <hr
-        style={{
-          width: "100%",
-          borderTop: "1px solid rgba(255,255,255,0.12)",
-          marginTop: 12,
-          marginBottom: 16,
-        }}
-      />
-
+      <Line />
       <GridWrapper $template={template}>
         {/* heading + subheading for first-column layouts */}
         {(template === "heading_image_image" ||
           template === "heading_menu_item_image") && (
-          <MenuDescription>
-            <Heading className="headingColor">{heading}</Heading>
-            {subheading && <Subheading>{subheading}</Subheading>}
-          </MenuDescription>
-        )}
+            <MenuDescription>
+              <Heading className="headingColor">{heading}</Heading>
+              {subheading && <Subheading>{subheading}</Subheading>}
+            </MenuDescription>
+          )}
 
         {template === 'heading_menu_item_image' && (
           <Links>
-             {flatLinks.map(({ id, lable, url }) => (
-          <LinkRow key={id}>
-            <LinkAnchor href={url || "#"}>{lable}</LinkAnchor>
-            <LuArrowUpRight />
-          </LinkRow>
-        ))}
+            {flatLinks.map(({ id, lable, url }) => (
+              <LinkRow key={id}>
+                <LinkAnchor href={url || "#"}>{lable}</LinkAnchor>
+                <LuArrowUpRight />
+              </LinkRow>
+            ))}
           </Links>
         )}
 
@@ -162,16 +154,16 @@ function Grid({ heading, subheading, links, img, grid }) {
         {/* image(s) on right for both heading_image_image and heading_menu_item_image */}
         {(template === "heading_image_image" ||
           template === "heading_menu_item_image") && (
-          <ImageWrapper>
-            {images[0] ? (
-              <img src={getImageUrl(images[0])} alt={heading || "img"} />
-            ) : (
-              <div
-                style={{ height: 320, background: "rgba(255,255,255,0.03)" }}
-              />
-            )}
-          </ImageWrapper>
-        )}
+            <ImageWrapper>
+              {images[0] ? (
+                <img src={getImageUrl(images[0])} alt={heading || "img"} />
+              ) : (
+                <div
+                  style={{ height: 320, background: "rgba(255,255,255,0.03)" }}
+                />
+              )}
+            </ImageWrapper>
+          )}
       </GridWrapper>
     </Div>
   );
