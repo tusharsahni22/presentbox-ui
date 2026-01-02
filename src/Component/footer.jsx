@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import FooterMenuCard from './atom/footerMenuCard';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import axios from "axios";
+import FooterMenuCard from "./atom/footerMenuCard";
+import NewLetterCard from "./atom/newletter";
 
 const FooterWrapper = styled.div`
   display: flex;
   min-height: 100vh;
   justify-content: space-around;
-     background: linear-gradient(
-    135deg,
-    #0b0b0b 0%,
-    #2a2a2a 45%,
-    #0f0f0f 100%
-  );
+  background: linear-gradient(135deg, #0b0b0b 0%, #2a2a2a 45%, #0f0f0f 100%);
   color: #fff;
   padding: 20px;
   text-align: center;
@@ -27,42 +24,34 @@ const Section = styled.div`
   gap: 40px;
   flex-wrap: wrap;
 `;
-const Brand = styled.div`
-  `;
+const Brand = styled.div``;
+
 
 function Footer() {
   const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(true);
-//   const ff = {
-//   "sections": [
-//     { "heading": "Navigate", "items": [{ "label": "Home", "url": "/x" }, {"label": "About", "url": "/y"}, {"label": "Contact", "url": "/z"} ] },
-//     { "heading": "Our Policy", "items": [{ "label": "Shipping Policy", "url": "/y" }] },
-//     { "heading": "Section C", "items": [{ "label": "Z", "url": "/z" }] }
-//   ]
-// }
 
   useEffect(() => {
-    async function fetchFooter() {
+    const controller = new AbortController();
+    const base = import.meta.env.VITE_API_BASE_URL || "http://localhost:1337";
+
+    (async () => {
       try {
-        const res = await fetch('http://localhost:1337/api/footers?populate=item'); // or your CMS client call
-        const json = await res.json();
-        console.log('Footer data:', json.data);
-        setSections(json.data || []);
+        const { data } = await axios.get(`${base}/api/footerr`, {
+          params: { populate: { section: { populate: { item: "*" } } } },
+          signal: controller.signal,
+        });
+        setSections(data?.data || []);
+        console.log("Footer data:", data);
       } catch (err) {
-        console.error('Footer load error:', err);
+        if (!axios.isCancel?.(err)) console.error("Footer load error:", err);
       } finally {
         setLoading(false);
       }
-    }
-    fetchFooter();
-  }, []);
-  // useEffect(() => {
-  //   // Simulate fetching data
-  //   // eslint-disable-next-line react-hooks/set-state-in-effect
-  //   setSections(ff.sections || []);
-  //   setLoading(false);
-  // }, []);
+    })();
 
+    return () => controller.abort();
+  }, []);
 
   if (loading) return <footer>Loading…</footer>;
 
@@ -70,14 +59,17 @@ function Footer() {
     <FooterWrapper>
       <Section>
         <Brand>
-        <Logo>Footer</Logo>
-        <p>© 2024 Your Company. All rights reserved.</p>
+          <Logo>Footer</Logo>
+          <p>© 2026 PresentBox. All rights reserved.</p>
         </Brand>
       </Section>
       <Section className="footer-grid">
-        {sections.map((s, i) => (
-          <FooterMenuCard key={i} heading={s.Heading} items={s.item} />
-        ))}
+        <>
+          {sections.section.map((s, i) => (
+            <FooterMenuCard key={i} heading={s.heading} items={s.item} />
+          ))}
+          {sections.newsletter && <NewLetterCard />}
+        </>
       </Section>
     </FooterWrapper>
   );
