@@ -1,6 +1,6 @@
-import React from "react";
 import styled from "styled-components";
 import { LuArrowUpRight } from "react-icons/lu";
+import Line from "./line";
 
 const Div = styled.div`
   width: 100%;
@@ -57,7 +57,7 @@ const Links = styled.div`
 
 const LinkRow = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 `;
 
@@ -77,96 +77,93 @@ function chunkArray(arr, n) {
   return result;
 }
 
+// Helper: flatten various shapes into a flat array of link items for single-column menus
+function flattenLinksForMenu(links) {
+  if (!Array.isArray(links)) return [];
+  const first = links[0];
+  return Array.isArray(first?.navlinks) ? links.flatMap((g) => g.navlinks) : Array.isArray(first?.items) ? links.flatMap((g) => g.items) : links;
+}
+
+// Helper: normalize groups into three columns
 function normalizeGroupsForThreeColumns(links) {
-  // Accept three supported shapes:
-  // 1) nested arrays: [ [...], [...], [...] ]
-  // 2) array of groups: [ { heading, items: [...] }, ... ]
-  // 3) flat array -> chunk into 3
+  if (!Array.isArray(links)) return [[], [], []];
+  const first = links[0];
+  if (Array.isArray(first?.navlinks)) return links.map((g) => g.navlinks || []);
+  if (Array.isArray(first?.items)) return links.map((g) => g.items || []);
+  if (Array.isArray(first)) return [links[0] || [], links[1] || [], links[2] || []];
+  return chunkArray(links, 3);
+}
 
-  if (!links) return [[], [], []];
-
-  // case: array of groups (objects with items)
-  if (Array.isArray(links) && links.length > 0 && links[0] && typeof links[0] === "object" && Array.isArray(links[0].items)) {
-    return links.map((g) => g.items || []);
-  }
-
-  // case: nested arrays
-  if (Array.isArray(links) && links.length > 0 && Array.isArray(links[0])) {
-    // ensure length 3
-    const out = [[], [], []];
-    for (let i = 0; i < 3; i++) out[i] = links[i] || [];
-    return out;
-  }
-
-  // case: flat array -> chunk into 3
-  return chunkArray(Array.isArray(links) ? links : [], 3);
+function getImageUrl(img) {
+  if (!img) return null;
+  if (typeof img === 'string') return img;
+  const base = (import.meta.env.VITE_API_BASE_URL || '');
+  const url = img?.url || img?.formats?.medium?.url || img?.formats?.small?.url || img?.formats?.thumbnail?.url || null;
+  if (!url) return null;
+  return url.startsWith('http') ? url : `${base}${url}`;
 }
 
 function Grid({ heading, subheading, links, img, grid }) {
-  const template = grid || "heading_image_image";
-  const images = Array.isArray(img) ? img : img ? [img] : [];
+  const template = grid;
+  const images = img == null ? [] : [img].flat();
 
-  // Prepare data for each layout
-  // For menu_item_menu_item_menu_item we expect links to be nested or groups; normalize to groupsOfItems
   const threeCols = normalizeGroupsForThreeColumns(links);
+  const flatLinks = flattenLinksForMenu(links);
 
   return (
     <Div>
-      <hr style={{ width: "100%", borderTop: "1px solid rgba(255,255,255,0.12)", marginTop: 12, marginBottom: 16 }} />
-
+      <Line />
       <GridWrapper $template={template}>
         {/* heading + subheading for first-column layouts */}
-        {(template === "heading_image_image" || template === "heading_menu_item_image") && (
-          <MenuDescription>
-            <Heading className="headingColor">{heading}</Heading>
-            {subheading && <Subheading>{subheading}</Subheading>}
-          </MenuDescription>
-        )}
+        {(template === "heading_image_image" ||
+          template === "heading_menu_item_image") && (
+            <MenuDescription>
+              <Heading className="headingColor">{heading}</Heading>
+              {subheading && <Subheading>{subheading}</Subheading>}
+            </MenuDescription>
+          )}
 
-        {/* middle column links for heading_menu_item_image */}
-        {template === "heading_menu_item_image" && (
+        {template === 'heading_menu_item_image' && (
           <Links>
-            {(Array.isArray(links) ? links : []).map((item, i) => {
-              const label = item?.lable || item?.label || item?.Name || item?.name || String(item || "");
-              const href = item?.url || item?.Url || item?.link || item?.path || "#";
-              const key = item?.id || item?.key || i;
-              return (
-                <LinkRow key={key}>
-                  <LinkAnchor href={href}>{label}</LinkAnchor>
-                  <LuArrowUpRight />
-                </LinkRow>
-              );
-            })}
+            {flatLinks.map(({ id, lable, url }) => (
+              <LinkRow key={id}>
+                <LinkAnchor href={url || "#"}>{lable}</LinkAnchor>
+                <LuArrowUpRight />
+              </LinkRow>
+            ))}
           </Links>
         )}
 
         {/* three equal columns of lists */}
-        {template === "menu_item_menu_item_menu_item" && (
-          threeCols.map((col, ci) => (
-            <div key={ci}>
+        {template === "menu_item_menu_item_menu_item" &&
+          threeCols.map((col) => (
+            <div key={col.id}>
               <Links>
-                {Array.isArray(col) && col.map((item, i) => {
-                  const label = item?.lable || item?.label || item?.Name || item?.name || String(item || "");
-                  const href = item?.url || item?.Url || item?.link || item?.path || "#";
-                  const key = item?.id || item?.key || `${ci}-${i}`;
-                  return (
-                    <LinkRow key={key}>
-                      <LinkAnchor href={href}>{label}</LinkAnchor>
-                      <LuArrowUpRight />
-                    </LinkRow>
-                  );
-                })}
+                {col.map(({ id, lable, url }) => (
+                  <LinkRow key={id}>
+                    <LinkAnchor href={url || "#"}>
+                      {lable || ""}
+                    </LinkAnchor>
+                    <LuArrowUpRight />
+                  </LinkRow>
+                ))}
               </Links>
             </div>
-          ))
-        )}
+          ))}
 
         {/* image(s) on right for both heading_image_image and heading_menu_item_image */}
-        {(template === "heading_image_image" || template === "heading_menu_item_image") && (
-          <ImageWrapper>
-            {images[0] ? <img src={images[0]} alt={heading || "img"} /> : <div style={{ height: 320, background: "rgba(255,255,255,0.03)" }} />}
-          </ImageWrapper>
-        )}
+        {(template === "heading_image_image" ||
+          template === "heading_menu_item_image") && (
+            <ImageWrapper>
+              {images[0] ? (
+                <img src={getImageUrl(images[0])} alt={heading || "img"} />
+              ) : (
+                <div
+                  style={{ height: 320, background: "rgba(255,255,255,0.03)" }}
+                />
+              )}
+            </ImageWrapper>
+          )}
       </GridWrapper>
     </Div>
   );

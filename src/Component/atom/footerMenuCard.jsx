@@ -9,9 +9,7 @@ const Wrapper = styled.div`
 `
 
 const Heading = styled.h1`
-  
   margin-bottom: 10px;
-
 `;
 const List = styled.ul`
   list-style: none;
@@ -36,7 +34,6 @@ const Link = styled.a`
 `
 
 export default function FooterMenuCard({ heading, items = [] }) {
-    console.log('FooterMenuCard items:', items, heading);
   return (
     <Wrapper>
       <Heading className='headingColor'>{heading}</Heading>

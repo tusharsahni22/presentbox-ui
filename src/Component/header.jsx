@@ -1,16 +1,17 @@
-
 import React, { useEffect, useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { styled } from "styled-components";
 import { IoSearch } from "react-icons/io5";
 import Grid from "./atom/grid";
+import axios from "axios";
 
 const HeaderWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   background-size: cover;
   background-position: center;
-  padding: 16px 24px;
+  padding: 0 111px;
+  top: 63px;
   width: 100%;
   position: fixed;
 `;
@@ -31,7 +32,7 @@ const Hover = styled.div`
 `;
 const Head = styled.div`
   display: flex;
-  gap: 12px;
+  gap: 20px;
   align-items: center;
 `;
 
@@ -43,15 +44,15 @@ const Logo = styled.div`
 // Left cover: primary menu area (darker, expands on hover)
 const CoverLeft = styled.div`
   display: ${({ $collapsed }) => ($collapsed ? "none" : "flex")};
-  gap: 12px;
+  gap: 1rem;
   align-items: center;
-  height: 54px;
+  height: 70px;
   padding: 10px 20px;
   width: ${({ $active }) => ($active ? "100%" : "fit-content")};
   overflow: hidden;
   background: rgba(0, 0, 0, 0.85);
   /* background-color: #633535; */
-  border-radius: 30px;
+  border-radius: 32px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12),
     inset 0 1px 1px rgba(255, 255, 255, 0.06);
@@ -100,76 +101,85 @@ function Header() {
   const [activeKey, setActiveKey] = useState(null);
 
   useEffect(() => {
-     let mounted = true;
-     setHoveredMenu("home");
-    async function loadMenu() {
+    // setHoveredMenu("home");
+
+    const controller = new AbortController();
+
+    const fetchMenu = async () => {
       try {
-        const res = await fetch("http://localhost:1337/api/headers?populate=*");
-        if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
-        const json = await res.json();
-        const items = (json.data || []).map((e) => {
-          const menudescription = e.MenuDescription || {};
-          const links = e.MenuLink || [];
-          const imgObj = e.Img || null;
-          let imgUrl = null;
-          if (imgObj) {
-            imgUrl = imgObj.formats?.medium?.url || imgObj.url || null;
-            if (imgUrl && imgUrl.startsWith("/")) {
-              imgUrl = `http://localhost:1337${imgUrl}`;
-            }
-          }
-
-          return {
-            key: e.id,
-            name: e.Name,
-            heading: menudescription.Heading,
-            subheading: menudescription.Description,
-            links: Array.isArray(links) ? links : [],
-            img: imgUrl,
-            grid: e.grid,
-          };
+        const { data } = await axios.get("http://localhost:1337/api/headers", {
+          params: {
+            "populate[menuDescription]": true,
+            "populate[img]": true,
+            "populate[navlink][populate][navlinks]": true,
+          },
+          signal: controller.signal,
         });
-        console.log(MENU.links);
 
-        if (mounted && items.length) {
+        const items =
+          data?.data?.map((e) => {
+            const menuDescription = e.menuDescription ?? {};
+            const navLinks = e.navlink ?? [];
+
+            return {
+              key: e.id,
+              name: e.name,
+              heading: menuDescription.heading ?? "",
+              subheading: menuDescription.description ?? "",
+              links: navLinks,
+              img: e.img ?? null,
+              grid: e.grid ?? "heading_image_image",
+            };
+          }) ?? [];
+
+        if (items.length > 0) {
           setMENU(items);
-          setActiveKey((prev) => prev || items[0].key);
-        }
-      } catch (err) {
-        console.error("Failed to load menu", err);
-      }
-    }
 
-    loadMenu();
-    return () => {
-      mounted = false;
+          // 👇 first item becomes selected menu
+          // setSelectedMenu(items[0]);
+
+          // optional if you still need activeKey
+          setActiveKey(items[0].key);
+        }
+      } catch (error) {
+        if (!axios.isCancel(error)) {
+          console.error("Failed to load menu", error);
+        }
+      }
     };
+
+    fetchMenu();
+
+    return () => controller.abort();
   }, []);
 
   const activeMenu = MENU.find((m) => m.name === hoveredMenu);
-
 
   return (
     <div>
       <HeaderWrapper>
         <CoverLeft
-        $collapsed={hovered && hovered !== "left"}
-        $active={hovered === "left"}
-        onMouseEnter={() => setHovered("left") }
-        onMouseLeave={() => setHovered(null)}>
+          $collapsed={hovered && hovered !== "left"}
+          $active={hovered === "left"}
+          onMouseEnter={() => setHovered("left")}
+          onMouseLeave={() => setHovered(null)}
+        >
           <Head>
             <Logo>PresentBox</Logo>
-            {!hovered && <RxHamburgerMenu size={20} />}
+            {!hovered && <RxHamburgerMenu size={22} />}
 
-            {hovered && Array.isArray(MENU) && MENU.map((e) => (
-              <Hover key={e.key} style={{ marginLeft: "50px" }}
-              $active={hoveredMenu === e.name}
-              onMouseEnter={() => setHoveredMenu(e.name)}
-              >
-                {e.name}
-              </Hover>
-            ))}
-  
+            {hovered &&
+              Array.isArray(MENU) &&
+              MENU.map((e) => (
+                <Hover
+                  key={e.key}
+                  style={{ marginLeft: "50px" }}
+                  $active={hoveredMenu === e.name}
+                  onMouseEnter={() => setHoveredMenu(e.name)}
+                >
+                  {e.name}
+                </Hover>
+              ))}
           </Head>
           {hovered && hoveredMenu && activeKey && activeMenu && (
             <Grid
@@ -185,10 +195,10 @@ function Header() {
         </CoverLeft>
 
         <CoverRight
-        $collapsed={hovered && hovered !== "right"}
-        onMouseEnter={() => setHovered("right")}
-        onMouseLeave={() => setHovered(null)}
-        $active={hovered === "right"}
+          $collapsed={hovered && hovered !== "right"}
+          onMouseEnter={() => setHovered("right")}
+          onMouseLeave={() => setHovered(null)}
+          $active={hovered === "right"}
         >
           <IoSearch />
           <IoSearch />
