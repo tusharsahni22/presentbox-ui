@@ -58,7 +58,7 @@ function Headercards({ heading, subheading, img }) {
         </div>
         <div>
           <ImageWrapper>
-            <img
+           {img && <img
               style={{
                 borderRadius: "20px",
                 width: "100%",
@@ -68,7 +68,7 @@ function Headercards({ heading, subheading, img }) {
               }}
               src={img}
               alt="Img"
-            />
+            />}
           </ImageWrapper>
         </div>
       </Grid>

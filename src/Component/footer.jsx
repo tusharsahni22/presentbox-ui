@@ -33,34 +33,35 @@ const Brand = styled.div`
 function Footer() {
   const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(true);
-  const ff = {
-  "sections": [
-    { "heading": "Navigate", "items": [{ "label": "Home", "url": "/x" }, {"label": "About", "url": "/y"}, {"label": "Contact", "url": "/z"} ] },
-    { "heading": "Our Policy", "items": [{ "label": "Shipping Policy", "url": "/y" }] },
-    { "heading": "Section C", "items": [{ "label": "Z", "url": "/z" }] }
-  ]
-}
+//   const ff = {
+//   "sections": [
+//     { "heading": "Navigate", "items": [{ "label": "Home", "url": "/x" }, {"label": "About", "url": "/y"}, {"label": "Contact", "url": "/z"} ] },
+//     { "heading": "Our Policy", "items": [{ "label": "Shipping Policy", "url": "/y" }] },
+//     { "heading": "Section C", "items": [{ "label": "Z", "url": "/z" }] }
+//   ]
+// }
 
-  // useEffect(() => {
-  //   async function fetchFooter() {
-  //     try {
-  //       const res = await fetch('/api/footer'); // or your CMS client call
-  //       const json = await res.json();
-  //       setSections(json.sections || []);
-  //     } catch (err) {
-  //       console.error('Footer load error:', err);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-  //   fetchFooter();
-  // }, [ff.sections]);
   useEffect(() => {
-    // Simulate fetching data
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSections(ff.sections || []);
-    setLoading(false);
+    async function fetchFooter() {
+      try {
+        const res = await fetch('http://localhost:1337/api/footers?populate=item'); // or your CMS client call
+        const json = await res.json();
+        console.log('Footer data:', json.data);
+        setSections(json.data || []);
+      } catch (err) {
+        console.error('Footer load error:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchFooter();
   }, []);
+  // useEffect(() => {
+  //   // Simulate fetching data
+  //   // eslint-disable-next-line react-hooks/set-state-in-effect
+  //   setSections(ff.sections || []);
+  //   setLoading(false);
+  // }, []);
 
 
   if (loading) return <footer>Loading…</footer>;
@@ -75,7 +76,7 @@ function Footer() {
       </Section>
       <Section className="footer-grid">
         {sections.map((s, i) => (
-          <FooterMenuCard key={i} heading={s.heading} items={s.items} />
+          <FooterMenuCard key={i} heading={s.Heading} items={s.item} />
         ))}
       </Section>
     </FooterWrapper>
