@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { styled } from "styled-components";
 import { IoSearch } from "react-icons/io5";
-import Grid from "./atom/grid";
+import Grid from "../atom/grid";
 import axios from "axios";
 
 const HeaderWrapper = styled.div`

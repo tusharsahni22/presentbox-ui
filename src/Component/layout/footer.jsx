@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import FooterMenuCard from "./atom/footerMenuCard";
-import NewLetterCard from "./atom/newletter";
+import FooterMenuCard from "../atom/footerMenuCard";
+import NewLetterCard from "../atom/newletter";
 
 const FooterWrapper = styled.div`
   display: flex;
