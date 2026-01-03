@@ -65,7 +65,7 @@ function Footer() {
       </Section>
       <Section className="footer-grid">
         <>
-          {sections.section.map((s, i) => (
+          {sections.section?.map((s, i) => (
             <FooterMenuCard key={i} heading={s.heading} items={s.item} />
           ))}
           {sections.newsletter && <NewLetterCard />}

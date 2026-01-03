@@ -15,28 +15,33 @@ const gridMap = {
 const GridWrapper = styled.div`
   display: grid;
   grid-template-columns: ${({ $template }) => gridMap[$template] || gridMap.heading_image_image};
-  gap: 40px;
+  gap: 50px;
   margin-top: 10px;
   align-items: start;
 `;
 
 const MenuDescription = styled.div`
-  padding-right: 12px;
+  /* padding-right: 12px; */
 `;
 
 const Heading = styled.h2`
-  font-size: 32px;
-  margin: 0 0 12px 0;
+font-size: 40px;
+line-height: 48px;   /* 1.2 */
+font-weight: 600;
+letter-spacing: -0.4px;
+margin: 0 0 16px 0;
 `;
 
 const Subheading = styled.p`
-  font-size: 18px;
-  margin: 0;
-  opacity: 0.9;
+font-size: 18px;
+line-height: 28px;   /* 1.55 */
+font-weight: 400;
+max-width: 420px;
 `;
 
 const ImageWrapper = styled.div`
   width: 100%;
+  /* height: 60%; */
   overflow: hidden;
   border-radius: 16px;
 
@@ -47,17 +52,28 @@ const ImageWrapper = styled.div`
     display: block;
     border-radius: 16px;
   }
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const Links = styled.div`
+font-size: 16px;
+line-height: 24px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 18px;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const LinkRow = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
 `;
 
@@ -65,9 +81,6 @@ const LinkAnchor = styled.a`
   color: #fff;
   text-decoration: none;
   font-size: 16px;
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 function chunkArray(arr, n) {
@@ -103,22 +116,28 @@ function getImageUrl(img) {
   return url.startsWith('http') ? url : `${base}${url}`;
 }
 
+
+
+
+
+
 function Grid({ heading, subheading, links, img, grid }) {
   const template = grid;
   const images = img == null ? [] : [img].flat();
-
   const threeCols = normalizeGroupsForThreeColumns(links);
   const flatLinks = flattenLinksForMenu(links);
+
+  
 
   return (
     <Div>
       <Line />
+        <Heading className="heading">{heading}</Heading>
       <GridWrapper $template={template}>
         {/* heading + subheading for first-column layouts */}
         {(template === "heading_image_image" ||
           template === "heading_menu_item_image") && (
             <MenuDescription>
-              <Heading className="headingColor">{heading}</Heading>
               {subheading && <Subheading>{subheading}</Subheading>}
             </MenuDescription>
           )}
@@ -138,7 +157,7 @@ function Grid({ heading, subheading, links, img, grid }) {
         {template === "menu_item_menu_item_menu_item" &&
           threeCols.map((col) => (
             <div key={col.id}>
-              <Links>
+              <Links style={{paddingTop:"16px"}}>
                 {col.map(({ id, lable, url }) => (
                   <LinkRow key={id}>
                     <LinkAnchor href={url || "#"}>
@@ -156,7 +175,7 @@ function Grid({ heading, subheading, links, img, grid }) {
           template === "heading_menu_item_image") && (
             <ImageWrapper>
               {images[0] ? (
-                <img src={getImageUrl(images[0])} alt={heading || "img"} />
+                <img style={{height: "250px"}} src={getImageUrl(images[0])} alt={heading || "img"} />
               ) : (
                 <div
                   style={{ height: 320, background: "rgba(255,255,255,0.03)" }}

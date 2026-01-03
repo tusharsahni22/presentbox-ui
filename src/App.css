@@ -1,3 +1,13 @@
+/* 
+Primary Heading Color:     background: linear-gradient(155deg, #000000 0%, #161616f2 80%,#000 100%);
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  font-family: "Rubik", sans-serif;
+  font-weight: 200;
+   font-family: 'Playfair Display', serif;
+font-family:"BBH Bartle", sans-serif;
+*/
+
+
 @font-face {
   font-family: "Inter";
   src: url("./assets/font/Inter/Inter-VariableFont_opsz,wght.ttf") format("truetype");
@@ -96,11 +106,38 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Playfair Display";
+  src: url("./assets/font/Playfair_Display/static/PlayfairDisplay-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Playfair Display";
+  src: url("./assets/font/Playfair_Display/static/PlayfairDisplay-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Playfair Display";
+  src: url("./assets/font/Playfair_Display/static/PlayfairDisplay-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
 }
+
+
 
 body {
   font-family: "Rubik", sans-serif;
@@ -108,7 +145,11 @@ body {
 }
 
 .heading{
-  font-family: "BBH Bartle", sans-serif;
+ font-family: 'Playfair Display', serif;
+  font-weight: 500;        
+  letter-spacing: -0.5px;   
+  word-spacing: 0px;        
+  color: #ffffff;
 }
 
 .headingColor {

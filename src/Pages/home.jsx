@@ -1,6 +1,11 @@
 import React from "react";
 import Header from "../Component/layout/header.jsx";
 import Footer from "../Component/layout/footer.jsx";
+// import Card from "../Component/atom/card.jsx";
+import VideoComponent from "../Component/atom/videoComponent.jsx";
+import CategoryCard from "../Component/layout/categoryCards.jsx";
+import Header from "../Component/layout/header.jsx";
+import Footer from "../Component/layout/footer.jsx";
 import FeatureCard from "../Component/atom/featureCard.jsx";
 import ReviewCarousel from "../Component/layout/reviewCarousel.jsx";
 import styled from "styled-components";
@@ -42,14 +47,17 @@ function Home() {
 `;
   return (
     <div
-      style={{
-        backgroundImage:
-          "url(https://i.pinimg.com/736x/39/13/90/391390a475ebd3fd253ef88a4c7f5552.jpg)",
-        backgroundSize: "cover",
-        height: "100vh",
-      }}
+      // style={{
+      //   backgroundImage:
+      //     "url(https://i.pinimg.com/736x/39/13/90/391390a475ebd3fd253ef88a4c7f5552.jpg)",
+      //   backgroundSize: "cover",
+      //   height: "100vh",
+      // }}
     >
-      <Header />
+      <VideoComponent src="./bgg.mp4" Text="A gifting company that turns moments into memories."/>
+      <Header/>
+      <CategoryCard/>
+
       <div style={{ height: "150vh" }}></div>
       <ReviewCarousel />
       <Section>

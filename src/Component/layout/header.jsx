@@ -4,20 +4,23 @@ import { styled } from "styled-components";
 import { IoSearch } from "react-icons/io5";
 import Grid from "../atom/grid";
 import axios from "axios";
+// import CardButtons from "./atom/cardButtons";
 
 const HeaderWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   background-size: cover;
   background-position: center;
-  padding: 0 111px;
+  padding: 0 64px;
   top: 63px;
   width: 100%;
   position: fixed;
+  z-index: 1000;
 `;
 
 const Hover = styled.div`
   font-size: 20px;
+  font-weight: 400;
   margin: 10px 0px;
   padding: 8px 16px;
   border-radius: 25px;
@@ -33,6 +36,7 @@ const Hover = styled.div`
 const Head = styled.div`
   display: flex;
   gap: 20px;
+  height: 50px;
   align-items: center;
 `;
 
@@ -46,26 +50,25 @@ const CoverLeft = styled.div`
   display: ${({ $collapsed }) => ($collapsed ? "none" : "flex")};
   gap: 1rem;
   align-items: center;
-  height: 70px;
+  /* height: 70px; */
   padding: 10px 20px;
   width: ${({ $active }) => ($active ? "100%" : "fit-content")};
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.85);
-  /* background-color: #633535; */
+  background: rgba(0, 0, 0, 0.95);
   border-radius: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: none;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12),
-    inset 0 1px 1px rgba(255, 255, 255, 0.06);
+  inset 0 1px 1px rgba(255, 255, 255, 0.06);
   color: #ffffff;
-
+  
   &:hover {
-    cursor: pointer;
-    height: 60vh;
+    background: linear-gradient(155deg, #000000 0%, #050505f0 90%,#000000 100%);
+    min-height: 60vh;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     transition: all 0.3s ease-in-out;
-    padding: 60px;
+    padding: 48px 60px 48px 60px;
     overflow: hidden;
     background-size: cover;
   }
@@ -86,7 +89,6 @@ const CoverRight = styled.div`
   color: #fff;
 
   &:hover {
-    cursor: pointer;
     height: auto;
     padding: 16px;
     transition: all 0.18s ease-in-out;
@@ -96,12 +98,12 @@ const CoverRight = styled.div`
 
 function Header() {
   const [hovered, setHovered] = useState(null);
-  const [hoveredMenu, setHoveredMenu] = useState(null);
+  const [hoveredMenu, setHoveredMenu] = useState("Home");
   const [MENU, setMENU] = useState([]);
-  const [activeKey, setActiveKey] = useState(null);
+  // const [activeKey, setActiveKey] = useState(null);
+
 
   useEffect(() => {
-    // setHoveredMenu("home");
 
     const controller = new AbortController();
 
@@ -139,7 +141,7 @@ function Header() {
           // setSelectedMenu(items[0]);
 
           // optional if you still need activeKey
-          setActiveKey(items[0].key);
+          // setActiveKey(items[0].key);
         }
       } catch (error) {
         if (!axios.isCancel(error)) {
@@ -154,6 +156,8 @@ function Header() {
   }, []);
 
   const activeMenu = MENU.find((m) => m.name === hoveredMenu);
+
+  
 
   return (
     <div>
@@ -181,8 +185,8 @@ function Header() {
                 </Hover>
               ))}
           </Head>
-          {hovered && hoveredMenu && activeKey && activeMenu && (
-            <Grid
+          {hovered && hoveredMenu  && activeMenu && (
+            <Grid 
               key={activeMenu.key}
               itemKey={activeMenu.key}
               heading={activeMenu.heading}
@@ -204,6 +208,11 @@ function Header() {
           <IoSearch />
           <IoSearch />
         </CoverRight>
+
+      {/* <CardButtons 
+          color="White"
+          cta="View more"
+      /> */}
       </HeaderWrapper>
     </div>
   );
