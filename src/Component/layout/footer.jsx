@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import FooterMenuCard from "./atom/footerMenuCard";
-import NewLetterCard from "./atom/newletter";
+import FooterMenuCard from "../atom/footerMenuCard";
+import NewLetterCard from "../atom/newletter";
 
 const FooterWrapper = styled.div`
   display: flex;
@@ -65,7 +65,7 @@ function Footer() {
       </Section>
       <Section className="footer-grid">
         <>
-          {sections.section.map((s, i) => (
+          {sections.section?.map((s, i) => (
             <FooterMenuCard key={i} heading={s.heading} items={s.item} />
           ))}
           {sections.newsletter && <NewLetterCard />}

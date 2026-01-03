@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { styled } from "styled-components";
 import { IoSearch } from "react-icons/io5";
-import Grid from "./atom/grid";
+import Grid from "../atom/grid";
 import axios from "axios";
+// import CardButtons from "./atom/cardButtons";
 
 const HeaderWrapper = styled.div`
   display: flex;
@@ -14,6 +15,7 @@ const HeaderWrapper = styled.div`
   top: 63px;
   width: 100%;
   position: fixed;
+  z-index: 1000;
 `;
 
 const Hover = styled.div`
@@ -52,15 +54,15 @@ const CoverLeft = styled.div`
   padding: 10px 20px;
   width: ${({ $active }) => ($active ? "100%" : "fit-content")};
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.85);
-  /* background-color: #633535; */
+  background: rgba(0, 0, 0, 0.95);
   border-radius: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: none;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12),
-    inset 0 1px 1px rgba(255, 255, 255, 0.06);
+  inset 0 1px 1px rgba(255, 255, 255, 0.06);
   color: #ffffff;
-
+  
   &:hover {
+    background: linear-gradient(155deg, #000000 0%, #050505f0 90%,#000000 100%);
     min-height: 60vh;
     display: flex;
     flex-direction: column;
@@ -206,6 +208,11 @@ function Header() {
           <IoSearch />
           <IoSearch />
         </CoverRight>
+
+      {/* <CardButtons 
+          color="White"
+          cta="View more"
+      /> */}
       </HeaderWrapper>
     </div>
   );
