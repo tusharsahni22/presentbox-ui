@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import FooterMenuCard from "../atom/footerMenuCard";
 import NewLetterCard from "../atom/newletter";
+import { API_BASE } from "../../api/config";
 
 const FooterWrapper = styled.div`
   display: flex;
@@ -33,11 +34,11 @@ function Footer() {
 
   useEffect(() => {
     const controller = new AbortController();
-    const base = import.meta.env.VITE_API_BASE_URL || "http://localhost:1337";
 
     (async () => {
       try {
-        const { data } = await axios.get(`${base}/api/footerr`, {
+        console.log("Fetching footer data...", `${API_BASE}/api/footerr`);
+        const { data } = await axios.get(`${API_BASE}/api/footerr`, {
           params: { populate: { section: { populate: { item: "*" } } } },
           signal: controller.signal,
         });

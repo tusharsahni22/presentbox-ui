@@ -2,6 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 // import { LuArrowUpRight } from "react-icons/lu";
 import CardButtons from "./cardButtons";
+import { getImageUrl } from "../../api/config";
 
 const Card = styled.div`
   background: #fff;
@@ -11,23 +12,23 @@ const Card = styled.div`
   gap: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
 
-  ${({ variant }) =>
-    variant === "big" &&
+  ${({ $variant }) =>
+    $variant === "big" &&
     css`
       flex-direction: column;
       grid-row: span 2;
     `}
 
-  ${({ variant }) =>
-    variant === "rect" &&
+  ${({ $variant }) =>
+    $variant === "rect" &&
     css`
       flex-direction: row;
       align-items: center;
       grid-column: span 2;
     `}
 
-  ${({ variant }) =>
-    variant === "square" &&
+  ${({ $variant }) =>
+    $variant === "square" &&
     css`
       flex-direction: column;
     `}
@@ -36,8 +37,8 @@ const Card = styled.div`
 const ImageWrap = styled.div`
   flex-shrink: 0;
 
-  ${({ variant }) =>
-    variant === "rect"
+  ${({ $variant }) =>
+    $variant === "rect"
       ? css`
           width: 180px;
         `
@@ -47,7 +48,7 @@ const ImageWrap = styled.div`
 
   img {
     width: 100%;
-    height: ${({ variant }) => (variant === "big" ? "400px" : "200px")};
+    height: ${({ $variant }) => ($variant === "big" ? "400px" : "200px")};
     object-fit: cover;
     border-radius: 14px;
   }
@@ -81,19 +82,12 @@ function ProductCard({
   color,
 }) 
 {
-    function getImageUrl(img) {
-  if (!img) return null;
-  if (typeof img === 'string') return img;
-  const base = (import.meta.env.VITE_API_BASE_URL || '');
-  const url = img?.url || img?.formats?.medium?.url || img?.formats?.small?.url || img?.formats?.thumbnail?.url || null;
-  if (!url) return null;
-  return url.startsWith('http') ? url : `${base}${url}`;
-}
+    
   return (
  
         
-    <Card variant={variant}>
-      <ImageWrap variant={variant}>
+    <Card $variant={variant}>
+      <ImageWrap $variant={variant}>
         <img src={getImageUrl(image)} alt={title} />
       </ImageWrap>
 

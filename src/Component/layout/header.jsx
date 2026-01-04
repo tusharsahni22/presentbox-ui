@@ -4,6 +4,7 @@ import { styled } from "styled-components";
 import { IoSearch } from "react-icons/io5";
 import Grid from "../atom/grid";
 import axios from "axios";
+import { API_BASE } from "../../api/config";
 // import CardButtons from "./atom/cardButtons";
 
 const HeaderWrapper = styled.div`
@@ -109,7 +110,8 @@ function Header() {
 
     const fetchMenu = async () => {
       try {
-        const { data } = await axios.get("http://localhost:1337/api/headers", {
+        // production-ready: no debug logs
+        const { data } = await axios.get(`${API_BASE}/api/headers`, {
           params: {
             "populate[menuDescription]": true,
             "populate[img]": true,
@@ -118,6 +120,7 @@ function Header() {
           signal: controller.signal,
         });
 
+        console.log("Header menu data:", data);
         const items =
           data?.data?.map((e) => {
             const menuDescription = e.menuDescription ?? {};

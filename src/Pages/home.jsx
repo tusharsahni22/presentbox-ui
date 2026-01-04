@@ -16,57 +16,43 @@ import {
 
 
 
-function Home() {
-
-  const features = [
-    {
-      icon: LuShoppingBag,
-      label: "Easy For Shopping",
-    },
-    {
-      icon: LuTruck,
-      label: "Fast & Free Shipping",
-    },
-    {
-      icon: LuHeadphones,
-      label: "24/7 Support",
-    },
-    {
-      icon: LuRefreshCcw,
-      label: "Money Back Guarantee",
-    },
-  ];
-  const Section = styled.section`
+const Section = styled.section`
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
   margin: 40px;
   justify-content: center;
 `;
-  return (
-    <div
-      // style={{
-      //   backgroundImage:
-      //     "url(https://i.pinimg.com/736x/39/13/90/391390a475ebd3fd253ef88a4c7f5552.jpg)",
-      //   backgroundSize: "cover",
-      //   height: "100vh",
-      // }}
-    >
-      <VideoComponent src="./bgg.mp4" Text="A gifting company that turns moments into memories."/>
-      <Header/>
-      <CategoryCard/>
 
-      <div style={{ height: "150vh" }}></div>
-      <ReviewCarousel />
-      <Section>
-        {features.map((item, index) => (
-          <FeatureCard
-            key={index}
-            icon={item.icon}
-            label={item.label}
-          />
-        ))}
-      </Section>
+const Body = styled.div`
+  max-width: 1500px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+`;
+
+function Home() {
+  const features = [
+    { icon: LuShoppingBag, label: "Easy For Shopping" },
+    { icon: LuTruck, label: "Fast & Free Shipping" },
+    { icon: LuHeadphones, label: "24/7 Support" },
+    { icon: LuRefreshCcw, label: "Money Back Guarantee" },
+  ];
+
+  return (
+    <div>
+      <VideoComponent src="./bgg.mp4" Text="A gifting company that turns moments into memories." />
+      <Header />
+      <Body>
+        <CategoryCard />
+        <ReviewCarousel />
+        <Section>
+          {features.map((item, index) => (
+            <FeatureCard key={index} icon={item.icon} label={item.label} />
+          ))}
+        </Section>
+      </Body>
       <Footer />
     </div>
   );

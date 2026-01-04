@@ -42,7 +42,7 @@ color: white;
 function VideoComponent({ src, Text }) {
   return (
      <Background>
-  <Video autoPlay muted loop playsinline>
+  <Video autoPlay muted loop playsInline>
     <source src={src} type="video/mp4" />
   </Video>
 

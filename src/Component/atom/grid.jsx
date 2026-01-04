@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { LuArrowUpRight } from "react-icons/lu";
 import Line from "./line";
+import { getImageUrl } from "../../api/config";
 
 const Div = styled.div`
   width: 100%;
@@ -107,14 +108,7 @@ function normalizeGroupsForThreeColumns(links) {
   return chunkArray(links, 3);
 }
 
-function getImageUrl(img) {
-  if (!img) return null;
-  if (typeof img === 'string') return img;
-  const base = (import.meta.env.VITE_API_BASE_URL || '');
-  const url = img?.url || img?.formats?.medium?.url || img?.formats?.small?.url || img?.formats?.thumbnail?.url || null;
-  if (!url) return null;
-  return url.startsWith('http') ? url : `${base}${url}`;
-}
+
 
 
 
