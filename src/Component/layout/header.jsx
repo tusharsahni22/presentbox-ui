@@ -3,6 +3,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { styled } from "styled-components";
 import { IoSearch } from "react-icons/io5";
 import { FaRegUserCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import Grid from "../atom/grid";
 import axios from "axios";
 import { API_BASE } from "../../api/config";
@@ -46,7 +47,7 @@ const SearchIcon = styled(IoSearch)`
   /* transition: all 0.3s ease; */
   padding: 7px;
   font-size: 44px;
-size: 35px;
+  size: 35px;
   &:hover {
     /* transform: rotate(15deg); */
     background-color: #454543;
@@ -62,20 +63,16 @@ const Logo = styled.div`
 
 // Search Modal Styles
 const SearchOverlay = styled.div`
-  background: #3B3B3B;
+  background: #3b3b3b;
   display: flex;
   align-items: flex-start;
   width: 100%;
   justify-content: center;
   padding: 10px 5px;
   border-radius: 12px;
-  
+
   z-index: 5000;
 `;
-
-
-
-
 
 const SearchInput = styled.input`
   background: transparent;
@@ -84,7 +81,7 @@ const SearchInput = styled.input`
   font-size: 20px;
   width: 100%;
   padding: 0px 30px;
- 
+
   outline: none;
   transition: all 0.3s ease;
 
@@ -96,7 +93,6 @@ const SearchInput = styled.input`
     border-bottom-color: rgba(255, 255, 255, 0.8);
   }
 `;
-
 
 // Left cover: primary menu area (darker, expands on hover)
 const CoverLeft = styled.div`
@@ -185,20 +181,27 @@ const SignIn = styled.div`
   font-weight: 400;
   min-width: 50px;
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #d32f2f;
+  }
 `;
 
 const SearchHere = styled.div`
-display: flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   min-width: 110px;
   font-size: 14px;
   font-weight: 400;
   padding: 7px;
-  `;
-
+`;
 
 function Header() {
+  const navigate = useNavigate();
   const [isLeftHovered, setIsLeftHovered] = useState(false);
   const [isRightHovered, setIsRightHovered] = useState(false);
   const [hoveredMenuName, setHoveredMenuName] = useState(null);
@@ -313,16 +316,16 @@ function Header() {
           $expanded={isRightHovered}
           // onMouseLeave={() => setIsRightHovered(false)}
         >
-          <div style={{display:"flex"}}>
-          <SearchIcon
-            onClick={(e) => {
-              e.stopPropagation(); // prevent outside click trigger
-              setIsRightHovered(true);
-              setIsLeftHovered(false);
-            }}
-          />
-          {isRightHovered && <SearchHere>Explore Gifts</SearchHere>}
-</div>  
+          <div style={{ display: "flex" }}>
+            <SearchIcon
+              onClick={(e) => {
+                e.stopPropagation(); // prevent outside click trigger
+                setIsRightHovered(true);
+                setIsLeftHovered(false);
+              }}
+            />
+            {isRightHovered && <SearchHere>Explore Gifts</SearchHere>}
+          </div>
           {isRightHovered && (
             <SearchOverlay>
               <SearchInput placeholder="Search..." />
@@ -336,6 +339,7 @@ function Header() {
               justifyContent: "center",
               gap: "5px",
             }}
+            onClick={() => navigate("/auth")}
           >
             <FaRegUserCircle size={25} />
             <SignIn>Sign in</SignIn>
